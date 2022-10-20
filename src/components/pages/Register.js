@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form';
 import { AuthContext } from '../context/AuthProvider';
 
 const Register = () => {
-    const { registrationWithEmail } = useContext(AuthContext);
+    const { registrationWithEmail, updateName } = useContext(AuthContext);
     const [error, setError] = useState('');
     const handleRegister = event => {
         event.preventDefault();
@@ -17,19 +17,15 @@ const Register = () => {
             setError("Your Password didn't match")
         }
 
-        if (name, email, password, confirm) {
-            registrationWithEmail(email, password)
-            .then((userCredential) => {
-                const user = userCredential.user;
-                form.reset();
-            })
-            .catch((error) => {
-                console.error('error', error);
-            })
-        }
-
-
-        console.log(name, email, password, confirm);
+        registrationWithEmail(email, password)
+        .then((userCredential) => {
+            const user = userCredential.user;
+            updateName(name);
+            form.reset();
+        })
+        .catch((error) => {
+            console.error('error', error);
+        })
     }
     return (
         <div>
