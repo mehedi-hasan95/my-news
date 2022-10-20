@@ -1,11 +1,10 @@
 import React from 'react';
 import Card from 'react-bootstrap/Card';
 import Image from 'react-bootstrap/Image';
-import { FaRegBookmark, FaShareAlt } from 'react-icons/fa';
+import { FaRegBookmark, FaShareAlt, FaStar, FaEye } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 const NewsPrevies = ({ newses }) => {
-    console.log(newses);
     const { author, details, image_url, rating, title, total_view, _id } = newses;
     return (
         <Card className='mb-4'>
@@ -19,8 +18,8 @@ const NewsPrevies = ({ newses }) => {
                     </div>
                 </div>
                 <div>
-                    <FaRegBookmark  />
-                    <FaShareAlt  />
+                    <FaRegBookmark />
+                    <FaShareAlt />
                 </div>
             </Card.Header>
             <Card.Body className='text-start'>
@@ -29,12 +28,16 @@ const NewsPrevies = ({ newses }) => {
                 <Card.Text>
                     {
                         details.length > 250 ?
-                        <p>{details.slice(0, 250) + '...'} <Link to={`/news/${_id}`}>Read More</Link></p>
-                        :
-                        <p>{details}</p>
+                            <p>{details.slice(0, 250) + '...'} <Link to={`/news/${_id}`}>Read More</Link></p>
+                            :
+                            <p>{details}</p>
                     }
                 </Card.Text>
             </Card.Body>
+            <Card.Footer className='d-flex justify-content-between align-items-center'>
+                <span><FaStar className='text-warning' /> {rating.number}</span>
+                <h5><FaEye /> {total_view}</h5>
+            </Card.Footer>
         </Card>
     );
 };
