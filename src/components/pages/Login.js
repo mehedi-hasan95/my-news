@@ -1,10 +1,18 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthProvider';
+import { toast } from 'react-toastify';
 
 const Login = () => {
-    const {loginWithEmail} = useContext(AuthContext);
+    // Navigate to other page
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
+
+    const [error, setError] = useState('');
+    const { loginWithEmail, setLoading } = useContext(AuthContext);
 
     const handlelogin = event => {
         event.preventDefault();
@@ -13,13 +21,23 @@ const Login = () => {
         const password = form.password.value;
 
         loginWithEmail(email, password)
-        .then((userCredential) => {
-            const user = userCredential.user;
-            form.reset();
-        })
-        .catch((error) => {
-            console.error('error', error);
-        })
+            .then((userCredential) => {
+                const user = userCredential.user;
+                form.reset();
+                setError('')
+                if(user.emailVerified) {
+                    navigate(from, { replace: true });
+                } else {
+                    toast.warning('Please Verify your email', {autoClose: 1000})
+                }
+            })
+            .catch((error) => {
+                console.error('error', error);
+                setError(error.message);
+            })
+            .finally (() => {
+                setLoading(false);
+            })
     }
     return (
         <Form onSubmit={handlelogin}>
@@ -30,8 +48,11 @@ const Login = () => {
 
             <Form.Group className="mb-3" controlId="formBasicPassword">
                 <Form.Label>Password</Form.Label>
-                <Form.Control name ="password" type="password" placeholder="Your Password" />
+                <Form.Control name="password" type="password" placeholder="Your Password" />
             </Form.Group>
+            {
+                error && <p className='text-danger'>{error}</p>
+            }
             <Button variant="primary" type="submit">
                 Submit
             </Button>

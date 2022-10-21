@@ -3,7 +3,7 @@ import { useLoaderData } from 'react-router-dom';
 import NewsPrevies from '../common/NewsPrevies';
 
 const Category = () => {
-    const news = useLoaderData()
+    const news = useLoaderData();
     return (
         <div>
             <h2>Total News: {news.length}</h2>
