@@ -8,19 +8,23 @@ import Register from "../pages/Register";
 import PrivateRoute from "./PrivateRoute";
 
 export const router = createBrowserRouter([
-    {path: '/', element: <Main></Main>,
-    children: [
-        {path: '/', element: <Home></Home>,
-        loader: () => fetch(`http://localhost:5000/news`)
+    {
+        path: '/', element: <Main></Main>,
+        children: [
+            {
+                path: '/', element: <Home></Home>,
+                loader: () => fetch(`https://my-news-server-gray.vercel.app/news`)
+            },
+            {
+                path: '/category/:id', element: <Category></Category>,
+                loader: ({ params }) => fetch(`https://my-news-server-gray.vercel.app/categories/${params.id}`),
+            },
+            {
+                path: '/news/:id', element: <PrivateRoute><News></News></PrivateRoute>,
+                loader: ({ params }) => fetch(`https://my-news-server-gray.vercel.app/news/${params.id}`),
+            },
+            { path: 'login', element: <Login></Login> },
+            { path: 'register', element: <Register></Register> },
+        ]
     },
-        {path: '/category/:id', element: <Category></Category>,
-        loader: ({params}) => fetch(`http://localhost:5000/categories/${params.id}`),
-    },
-        {path: '/news/:id', element: <PrivateRoute><News></News></PrivateRoute>,
-        loader: ({params}) => fetch(`http://localhost:5000/news/${params.id}`),
-    },
-    {path: 'login', element: <Login></Login>},
-    {path: 'register', element: <Register></Register>},
-    ]
-},
 ])
